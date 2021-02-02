@@ -59,11 +59,17 @@ export default class ShadowMain extends cc.Component {
 
     update() {
         this.step();
+
+        this.getCamera() && (this.getCamera().position = this.nodePlayer.position);
     }
 
     //================================================ Private
     private isCameraEnabled() {
-        return !!cc.find('Canvas/node_camera');
+        return !!this.getCamera();
+    }
+
+    private getCamera() {
+        return cc.find('Canvas/node_camera');
     }
 
     private getCornerPoints(): IShadowBorderPoint[] {
@@ -126,6 +132,7 @@ export default class ShadowMain extends cc.Component {
 
                 // 如果是原阻挡线段, 则向线段中心点缩进一小部分, 以避开顶点排序问题 - @1
                 if (isSourceSegment) {
+                    // 这里按像素做偏移会更精确点 @todo
                     var segFactor = posBorder.posIndex == 0? 0.01 : 0.99;
                     posIntersect = cc.pLerp(ele[0], ele[1], segFactor);
                 } else {
